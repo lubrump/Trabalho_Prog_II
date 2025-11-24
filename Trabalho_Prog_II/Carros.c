@@ -5,8 +5,9 @@ void cadastrarCarro() {
     FILE *arquivo;
     Carro carro;
     int qtd;
-
-    printf("\n--- Quantos carros deseja cadastrar? ---\n");
+    printf("-----------------------------------------------------------\n");   
+    printf("Quantos carros deseja cadastrar?\n");
+    printf("-----------------------------------------------------------\n");
     scanf("%d", &qtd);
     getchar(); // limpa o buffer
 
@@ -17,8 +18,7 @@ void cadastrarCarro() {
     }
 
     for (int i = 0; i < qtd; i++) {
-        printf("\n--- Cadastro do carro %d ---\n", i + 1);
-
+        printf("------------------ Cadastro do carro %d -------------------\n", i + 1);
         printf("ID: ");
         scanf("%d", &carro.id);
         getchar();
@@ -38,7 +38,6 @@ void cadastrarCarro() {
         printf("Preco: ");
         scanf("%f", &carro.preco);
         getchar();
-
         carro.ativo = 1;
         carro.alugado = 0;
 
@@ -46,21 +45,21 @@ void cadastrarCarro() {
     }
 
     fclose(arquivo);
-    printf("\n--- Carros cadastrados! ---\n");
+    printf("-----------------------------------------------------------\n");
+    printf("Carros cadastrados!\n");
 }
-
 void lerCarro() {
     FILE *arquivo;
     Carro carro;
 
     arquivo = fopen("carros.txt", "rb");
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");
         printf("Nenhum arquivo encontrado.\n");
         return;
     }
 
-    printf("\n--- Lista de Carros Cadastrados ---\n");
-
+    printf("--------------- Lista de Carros Cadastrados ---------------\n\n");
     while ((fread(&carro, sizeof(Carro), 1, arquivo) == 1)) {
         if(carro.ativo == 1){
             printf("ID: %d\n", carro.id);
@@ -72,19 +71,18 @@ void lerCarro() {
     }
     fclose(arquivo);
 }
-
 void lerDisponiveis() {
     FILE *arquivo;
     Carro carro;
 
     arquivo = fopen("carros.txt", "rb");
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");
         printf("Nenhum arquivo encontrado.\n");
         return;
     }
 
-    printf("\n--- Lista de Carros Disponiveis ---\n");
-
+    printf("--------------- Lista de Carros Disponiveis ---------------\n\n");
     while ((fread(&carro, sizeof(Carro), 1, arquivo) == 1)) {
         if((carro.ativo == 1) && (carro.alugado == 0)){
             printf("ID: %d\n", carro.id);
@@ -97,7 +95,6 @@ void lerDisponiveis() {
     }
     fclose(arquivo);
 }
-
 void lerAlugados() {
     FILE *alugados = fopen("carrosalugados.txt", "rb");
     FILE *arquivo = fopen("carros.txt", "rb");
@@ -105,15 +102,17 @@ void lerAlugados() {
     Carro carro;
  
     if (alugados == NULL) {
+        printf("-----------------------------------------------------------\n");   
         printf("Nenhum arquivo encontrado.\n");
         return;
     }
     if (arquivo == NULL) {
-        printf("Nenhum arquivo encontrado.\n");
+        printf("-----------------------------------------------------------\n");   
+        printf("Nenhum arquivo encontrado.\n"); 
         return;
     }
 
-    printf("\n--- Lista de Carros Alugados ---\n");
+    printf("----------------- Lista de Carros Alugados ----------------\n\n");
 
     while ((fread(&aluguel, sizeof(Aluguel), 1, alugados) == 1)) {
 
@@ -138,19 +137,18 @@ void lerAlugados() {
     }
     fclose(alugados);
 }
-
-
 void editarCarro() {
     FILE *arquivo;
     Carro carro, editaCarro;
     int id, encontrado = 0;
 
-    printf("\n--- Qual carro deseja editar? ---\n");
+    printf("---------------- Qual carro deseja editar? ----------------\n\n");
     scanf("%d", &id);
     getchar(); // limpa o buffer
 
     arquivo = fopen("carros.txt", "rb+"); 
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");   
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
@@ -164,7 +162,7 @@ void editarCarro() {
             printf("Ano: %d\n", carro.ano);
             printf("Preco: R$%.2f\n\n", carro.preco);
 
-            printf("--- Digite sua edicao: ---\n");
+            printf  ("-------------------- Digite sua edicao: -------------------\n\n");
             printf("ID: ");
             scanf("%d", &editaCarro.id);
             getchar();
@@ -190,27 +188,29 @@ void editarCarro() {
 
             fseek(arquivo, -sizeof(Carro), SEEK_CUR);
             fwrite(&editaCarro, sizeof(Carro), 1, arquivo);
-            printf("Registro %d editado com sucesso!", id);
+            printf("\n-----------------------------------------------------------\n");   
+            printf("Registro %d editado com sucesso!\n", id);  
             break;
         }
     }
     if(encontrado != 1){
+        printf("\n-----------------------------------------------------------\n");   
         printf("Registo com ID: %d nao encontrado\n", id);
     }
     fclose(arquivo);
 }
-
 void deletarCarro(){
     FILE *arquivo;
     Carro carro, deletaCarro;
     int id, encontrado;
 
-    printf("\n--- Qual carro deseja deletar? ---\n");
+    printf("--------------- Qual carro deseja deletar? ----------------\n");
     scanf("%d", &id);
     getchar(); // limpa o buffer
 
     arquivo = fopen("carros.txt", "rb+"); 
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");   
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
@@ -234,16 +234,17 @@ void deletarCarro(){
 
             fseek(arquivo, -sizeof(Carro), SEEK_CUR);
             fwrite(&deletaCarro, sizeof(Carro), 1, arquivo);
-            printf("Registro %d deletado com sucesso!", id);
+            printf("-----------------------------------------------------------\n");   
+            printf("Registro %d deletado com sucesso!\n", id);
             break;
         }
     }
     if(encontrado != 1){
+        printf("\n-----------------------------------------------------------\n");   
         printf("Registo com ID: %d nao encontrado\n", id);
     }
     fclose(arquivo);
 }
-
 void alugarCarro() {
 
     Aluguel aluguel;
@@ -253,16 +254,19 @@ void alugarCarro() {
     FILE * arquivo = fopen("carros.txt", "rb+");
     FILE * alugados = fopen("carrosalugados.txt", "ab");
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");   
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
 
     getchar();
-    printf("\n--- Alugar Carro ---\n");
-    printf("Digite a placa do carro que deseja alugar: ");
+    printf("-----------------------------------------------------------\n");
+    printf("Alugar Carro\n"); 
+    printf("-----------------------------------------------------------\n");
+    printf("Digite a placa do carro que deseja alugar: \n");  
     fgets(aluguel.placa, 10, stdin);
     aluguel.placa[strcspn(aluguel.placa, "\n")] = '\0';
-
+    printf("-----------------------------------------------------------\n");
     while (fread(&carro, sizeof(Carro), 1, arquivo) > 0)
     {
         if((strcmp(aluguel.placa, carro.placa) == 0) && (carro.alugado == 0)){
@@ -298,17 +302,18 @@ void alugarCarro() {
             fwrite(&aluguel, sizeof(Aluguel), 1, alugados);
             fclose(arquivo);
             fclose(alugados);
-            printf("Carro alugado com sucesso!");
+            printf("-----------------------------------------------------------\n");   
+            printf("Carro alugado com sucesso!\n");
             break;
         }
     }
     if(encontrado!= 1){
         fclose(arquivo);
         fclose(alugados);
-        printf("Carro indisponivel ou inexistente :(");
+        printf("\n-----------------------------------------------------------\n");   
+        printf("Carro indisponivel ou inexistente.\n");
     }
 }
-
 void devolverCarro(){
 
     Aluguel aluguel, aluguelDevolve;
@@ -318,17 +323,22 @@ void devolverCarro(){
     FILE * arquivo = fopen("carros.txt", "rb+");
     FILE * alugados = fopen("carrosalugados.txt", "rb+");
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");   
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
     if (alugados == NULL) {
+        printf("-----------------------------------------------------------\n");   
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
 
     getchar();
-    printf("\n--- Devolver Carro ---\n");
-    printf("Digite a placa do carro que deseja devolver: ");
+    printf("-----------------------------------------------------------\n");
+    printf("Devolver Carro\n");
+    printf("-----------------------------------------------------------\n");   
+    printf("Digite a placa do carro que deseja devolver: \n");
+    printf("-----------------------------------------------------------\n");   
     fgets(aluguel.placa, 10, stdin);
     aluguel.placa[strcspn(aluguel.placa, "\n")] = '\0';
 
@@ -349,11 +359,15 @@ void devolverCarro(){
 
             fseek(arquivo, -sizeof(Carro), SEEK_CUR);
             fwrite(&carroDevolve, sizeof(Carro), 1, arquivo);
+            printf("\n-----------------------------------------------------------\n");   
+            printf("Carro devolvido com sucesso!! \n");
+            printf("-----------------------------------------------------------\n");
             break;
         }
     }
     if(encontrado1!= 1){
-        printf("Carro já devolvido ou inexistente :(");
+        printf("-----------------------------------------------------------\n");   
+        printf("Carro já devolvido ou inexistente.\n"); 
     }
 
     while (fread(&aluguel, sizeof(Aluguel), 1, alugados) > 0)
@@ -372,14 +386,14 @@ void devolverCarro(){
             fwrite(&aluguelDevolve, sizeof(Aluguel), 1, alugados);
             fclose(arquivo);
             fclose(alugados);
-            printf("Carro devolvido com sucesso!!\n");
             break;
         }
     }
-    if(encontrado2!= 1){
+    if(encontrado2!= 1 && encontrado1!=0){
         fclose(arquivo);
         fclose(alugados);
-        printf("Carro ja devolvido ou inexistente :(");
+        printf("\n-----------------------------------------------------------\n");   
+        printf("Carro ja devolvido ou inexistente. \n");
+        printf("-----------------------------------------------------------\n");   
     }
-    
 }

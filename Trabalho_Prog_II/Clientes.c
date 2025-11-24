@@ -4,8 +4,9 @@ void cadastrarCliente() {
     FILE *arquivo;
     Cliente cliente;
     int qtd;
-
+    printf("-----------------------------------------------------------\n");
     printf("Quantos clientes deseja cadastrar?\n");
+    printf("-----------------------------------------------------------\n");
     scanf("%d", &qtd);
     getchar(); // limpa o buffer
 
@@ -16,8 +17,7 @@ void cadastrarCliente() {
     }
 
     for (int i = 0; i < qtd; i++) {
-        printf("\n--- Cadastro de Cliente %d ---\n", i + 1);
-
+    printf("----------------- Cadastro de Cliente %d ------------------\n", i + 1);
         printf("ID: ");
         scanf("%d", &cliente.id);
         getchar();
@@ -44,9 +44,9 @@ void cadastrarCliente() {
     }
 
     fclose(arquivo);
+    printf("-----------------------------------------------------------\n");
     printf("Clientes cadastrados!\n");
 }
-
 void lerCliente() {
     FILE *arquivo;
     Cliente cliente;
@@ -57,8 +57,7 @@ void lerCliente() {
         return;
     }
 
-    printf("\n--- Lista de Clientes Cadastrados ---\n");
-
+    printf("-------------- Lista de Clientes Cadastrados --------------\n\n");
     while ((fread(&cliente, sizeof(Cliente), 1, arquivo) == 1)) {
         if(cliente.ativo == 1){
             printf("ID: %d\n", cliente.id);
@@ -70,18 +69,18 @@ void lerCliente() {
     }
     fclose(arquivo);
 }
-
 void editarCliente() {
     FILE *arquivo;
     Cliente cliente, editaCliente;
     int id, encontrado = 0;
 
-    printf("\n--- Qual cliente deseja editar? ---\n");
+    printf("--------------- Qual cliente deseja editar? ---------------\n\n");
     scanf("%d", &id);
     getchar(); // limpa o buffer
 
     arquivo = fopen("clientes.txt", "rb+"); 
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
@@ -94,8 +93,7 @@ void editarCliente() {
             printf("CNH: %s\n", cliente.cnh);
             printf("Telefone: %s\n", cliente.telefone);
             printf("Email: %s\n\n", cliente.email);
-
-            printf("--- Digite sua edicao: ---\n");
+            printf("-------------------  Digite sua edicao: -------------------\n\n");
             printf("ID: ");
             scanf("%d", &editaCliente.id);
             getchar();
@@ -120,27 +118,29 @@ void editarCliente() {
 
             fseek(arquivo, -sizeof(Cliente), SEEK_CUR);
             fwrite(&editaCliente, sizeof(Cliente), 1, arquivo);
-            printf("Registro %d editado com sucesso!", id);
+            printf("\n-----------------------------------------------------------\n");
+            printf("Registro %d editado com sucesso!\n", id);
             break;
         }
     }
     if(encontrado != 1){
+        printf("\n-----------------------------------------------------------\n");
         printf("Registo com ID: %d nao encontrado\n", id);
     }
     fclose(arquivo);
 }
-
-void deletarCliente(){
+   void deletarCliente(){
     FILE *arquivo;
     Cliente cliente, deletaCliente;
     int id, encontrado;
 
-    printf("\n--- Qual cliente deseja deletar? ---\n");
+    printf("--------------- Qual cliente deseja deletar? ---------------\n\n");
     scanf("%d", &id);
     getchar(); // limpa o buffer
 
     arquivo = fopen("clientes.txt", "rb+"); 
     if (arquivo == NULL) {
+        printf("-----------------------------------------------------------\n");
         printf("Erro ao abrir o arquivo para escrita.\n");
         return;
     }
@@ -163,11 +163,13 @@ void deletarCliente(){
 
             fseek(arquivo, -sizeof(Cliente), SEEK_CUR);
             fwrite(&deletaCliente, sizeof(Cliente), 1, arquivo);
-            printf("Registro %d deletado com sucesso!", id);
+            printf("\n-----------------------------------------------------------\n");
+            printf("Registro %d deletado com sucesso!\n", id);
             break;
         }
     }
     if(encontrado != 1){
+        printf("\n-----------------------------------------------------------\n");
         printf("Registo com ID: %d nao encontrado\n", id);
     }
     fclose(arquivo);
